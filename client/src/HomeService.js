@@ -7,43 +7,20 @@ const url = 'http://localhost:3000';
 
 class HomeService{
     // Get buyers, transactions and products
-    static getAllBuyers(){
+    static getAllData(){
         return new Promise(async (resolve, reject) => {
             try {
                 const res = await axios.get(`${url}/${ts}`);
                 const data = res.data;
-                resolve(data.buyers);
+                resolve(data);
             } catch (error) {
                 reject(error);
             }
         })
     }
 
-    static getAllProducts(){
-        return new Promise(async (resolve, reject) => {
-            try {
-                const res = await axios.get(`${url}/${ts}`);
-                const data = res.data;
-                resolve(data.products);
-            } catch (error) {
-                reject(error);
-            }
-        })
-    }
 
-    static getAllTransactions(){
-        return new Promise(async (resolve, reject) => {
-            try {
-                const res = await axios.get(`${url}/${ts}`);
-                const data = res.data;
-                resolve(data.transactions);
-            } catch (error) {
-                reject(error);
-            }
-        })
-    }
-
-    // Get buyers
+    // Get buyers endpoint
     static getBuyers(){
         return new Promise(async (resolve, reject) => {
             try {

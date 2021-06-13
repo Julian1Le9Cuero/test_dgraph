@@ -32,15 +32,13 @@
         </h2>
 
         <v-row justify="center">
-          <div class="buyer"
-            v-for="(buyer, idx) in buyers"
+          <div class="item-grid">
+            <buyer v-for="(buyer, idx) in response.buyers"
             :key="buyer.id"
-            :item="buyer"
-            :index="idx"
-          >
-          {{buyer.date.slice(0,10)}}
-            <a class="text" :href="buyer.id">{{buyer.name}}</a>
-            <p class="text">Age: {{buyer.age}}</p>
+            :id_num="buyer.id"
+            :name="buyer.name"
+            :age="buyer.age"
+            :index="idx"/>
           </div>
         </v-row>
       </v-col>
@@ -54,15 +52,12 @@
         </h2>
 
         <v-row justify="center">
-          <div class="products"
-            v-for="(product, idx) in products"
+          <div class="item-grid">
+            <product v-for="(product, idx) in response.products"
             :key="product.id"
-            :item="product"
-            :index="idx"
-          >
-
-            <p class="text">{{product.name}}</p>
-            <p class="text">Price: {{`$${product.price}`}}</p>
+            :name="product.name"
+            :price="product.price"
+            :index="idx"/>
           </div>
         </v-row>
       </v-col>
@@ -76,16 +71,17 @@
         </h2>
 
         <v-row justify="center">
+          <div class="item-grid">
           <div class="transactions"
-            v-for="(transaction, idx) in transactions"
+            v-for="(transaction, idx) in response.transactions"
             :key="transaction.id"
             :item="transaction"
             :index="idx"
           >
-
-            <p class="text">Transaction ID: {{transaction.id}}</p>
+            <p class="text"><strong>Transaction ID:</strong> {{transaction.id}}</p>
             <p class="text">Buyer ID: {{transaction.buyer.id}}</p>
             <p class="text">Device: {{transaction.device}}</p>
+          </div>
           </div>
         </v-row>
       </v-col>
@@ -95,34 +91,26 @@
 
 <script>
 import HomeService from '../HomeService'
+import Product from '../components/Product.vue'
+import Buyer from '../components/Buyer.vue'
 
   export default {
-    name: 'HelloWorld',
-
+    name: 'Welcome',
+    components:{
+      Product,
+      Buyer
+    },
     data: () => ({
-        buyers: [],
-        products: [],
-        transactions: [],
+        response: {},
         error: ''
     }),
-    // Lifecycle method rthat runs once the component is created
+    // Lifecycle method that runs once the component is created
     async created() {
       try {
-        this.buyers = await HomeService.getAllBuyers()
-        this.products = await HomeService.getAllProducts()
-        this.transactions = await HomeService.getAllTransactions()
+        this.response = await HomeService.getAllData()
       } catch (err) {
         this.error = err.message
       }
     },
   }
 </script>
-
-<style scoped>
-p.error{
-  border: 1px solid #ff5b5f;
-  background-color: #ffc5c1;
-  padding: 10px;
-  margin-bottom: 15px;
-}
-</style>
