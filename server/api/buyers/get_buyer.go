@@ -11,10 +11,10 @@ import (
 )
 
 type GetBuyerRes struct {
-	Transactions           []models.TransactionDgraph
-	Products               []models.ProductDgraph
-	ProductRecommendations []models.ProductDgraph
-	Buyers                 []models.BuyerDgraph
+	Transactions           []models.TransactionDgraph `json:"transactions"`
+	Products               []models.ProductDgraph     `json:"products"`
+	ProductRecommendations []models.ProductDgraph     `json:"productRecommendations"`
+	Buyers                 []models.BuyerDgraph       `json:"buyers"`
 }
 
 type Query struct {
@@ -71,7 +71,6 @@ func GetBuyer(client *dgo.Dgraph, buyerId string) GetBuyerRes {
 			res.Products = BuyerProducts(client, trnsactItem.Products)
 		}
 		// Get buyers by ip and also set recommendations
-		fmt.Println("BUYER IP:", res.Transactions[0].IP)
 		res.Buyers = BuyersByIp(client, res.Transactions[0].IP, buyerId)
 	}
 
