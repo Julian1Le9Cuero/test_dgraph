@@ -1,59 +1,128 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-router" target="_blank" rel="noopener">router</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-vuex" target="_blank" rel="noopener">vuex</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
-  </div>
+  <v-container>
+    <v-row class="text-center">
+      <v-col cols="12">
+        <v-img
+          :src="require('../assets/logo.svg')"
+          class="my-3"
+          contain
+          height="200"
+        />
+      </v-col>
+
+      <v-col class="mb-4">
+        <h1 class="display-2 font-weight-bold mb-3">
+          Welcome to Dgraph Shopper
+        </h1>
+
+        <p class="subheading font-weight-regular">
+          Take a look at the
+          <br>
+          buyers, products and transactions
+        </p>
+        <p class="error" v-if="error">{{error}}</p>
+      </v-col>
+
+      <v-col
+        class="mb-5"
+        cols="12"
+      >
+        <h2 class="headline font-weight-bold mb-3">
+          Buyers
+        </h2>
+
+        <v-row justify="center">
+          <div class="buyer"
+            v-for="(buyer, idx) in buyers"
+            :key="buyer.id"
+            :item="buyer"
+            :index="idx"
+          >
+          {{buyer.date.slice(0,10)}}
+            <a class="text" :href="buyer.id">{{buyer.name}}</a>
+            <p class="text">Age: {{buyer.age}}</p>
+          </div>
+        </v-row>
+      </v-col>
+
+      <v-col
+        class="mb-5"
+        cols="12"
+      >
+        <h2 class="headline font-weight-bold mb-3">
+          Products
+        </h2>
+
+        <v-row justify="center">
+          <div class="products"
+            v-for="(product, idx) in products"
+            :key="product.id"
+            :item="product"
+            :index="idx"
+          >
+
+            <p class="text">{{product.name}}</p>
+            <p class="text">Price: {{`$${product.price}`}}</p>
+          </div>
+        </v-row>
+      </v-col>
+
+      <v-col
+        class="mb-5"
+        cols="12"
+      >
+        <h2 class="headline font-weight-bold mb-3">
+          Transactions
+        </h2>
+
+        <v-row justify="center">
+          <div class="transactions"
+            v-for="(transaction, idx) in transactions"
+            :key="transaction.id"
+            :item="transaction"
+            :index="idx"
+          >
+
+            <p class="text">Transaction ID: {{transaction.id}}</p>
+            <p class="text">Buyer ID: {{transaction.buyer.id}}</p>
+            <p class="text">Device: {{transaction.device}}</p>
+          </div>
+        </v-row>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
-export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String
+import HomeService from '../HomeService'
+
+  export default {
+    name: 'HelloWorld',
+
+    data: () => ({
+        buyers: [],
+        products: [],
+        transactions: [],
+        error: ''
+    }),
+    // Lifecycle method rthat runs once the component is created
+    async created() {
+      try {
+        this.buyers = await HomeService.getAllBuyers()
+        this.products = await HomeService.getAllProducts()
+        this.transactions = await HomeService.getAllTransactions()
+      } catch (err) {
+        this.error = err.message
+      }
+    },
   }
-}
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
+<style scoped>
+p.error{
+  border: 1px solid #ff5b5f;
+  background-color: #ffc5c1;
+  padding: 10px;
+  margin-bottom: 15px;
 }
 </style>
