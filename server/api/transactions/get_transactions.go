@@ -7,7 +7,7 @@ import (
 	"log"
 
 	"github.com/dgraph-io/dgo/v200"
-	"github.com/julian1le9cuero/dgraph_challenge/database/server/models"
+	"github.com/julian1le9cuero/dgraph_challenge/server/database/models"
 )
 
 type Root struct {

@@ -7,7 +7,7 @@ import (
 	"log"
 
 	"github.com/dgraph-io/dgo/v200"
-	"github.com/julian1le9cuero/dgraph_challenge/database/server/models"
+	"github.com/julian1le9cuero/dgraph_challenge/server/database/models"
 )
 
 type GetBuyerRes struct {
@@ -71,6 +71,7 @@ func GetBuyer(client *dgo.Dgraph, buyerId string) GetBuyerRes {
 			res.Products = BuyerProducts(client, trnsactItem.Products)
 		}
 		// Get buyers by ip and also set recommendations
+		fmt.Println("BUYER IP:", res.Transactions[0].IP)
 		res.Buyers = BuyersByIp(client, res.Transactions[0].IP, buyerId)
 	}
 
@@ -138,7 +139,7 @@ func BuyersByIp(client *dgo.Dgraph, buyerIp string, buyerId string) []models.Buy
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("TRANSACT BY IP", trnsactItems)
+
 	var buyersInfo []models.BuyerDgraph
 	for _, item := range trnsactItems.NewQuery {
 		buyersInfo = append(buyersInfo, BuyerInfo(client, item.Buyer.ID))
@@ -174,11 +175,15 @@ func BuyerInfo(client *dgo.Dgraph, buyerId string) models.BuyerDgraph {
 		log.Fatal(err)
 	}
 
-	var BuyerInfo models.BuyerDgraph
+	type BuyerQuery struct {
+		NewQuery []models.BuyerDgraph `json:"new_query"`
+	}
+
+	var BuyerInfo BuyerQuery
 	err = json.Unmarshal(resp.Json, &BuyerInfo)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	return BuyerInfo
+	return BuyerInfo.NewQuery[0]
 }

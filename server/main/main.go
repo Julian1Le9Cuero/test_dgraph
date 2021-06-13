@@ -16,13 +16,13 @@ import (
 	"github.com/julian1le9cuero/dgraph_challenge/server/api/transactions"
 	"github.com/julian1le9cuero/dgraph_challenge/server/database/dgo_test"
 	"github.com/julian1le9cuero/dgraph_challenge/server/database/models"
-	"github.com/julian1le9cuero/dgraph_challenge/server/database/storage"
+	// "github.com/julian1le9cuero/dgraph_challenge/server/database/storage"
 )
 
 func main() {
 	client := dgo_test.GetDgraphClient()
 	// // Get and save buyers to the database
-	storage.SaveData(client)
+	// storage.SaveData(client)
 
 	// Initialize chi router
 	r := chi.NewRouter()
