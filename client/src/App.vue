@@ -115,4 +115,16 @@ p.error{
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
 }
+
+.text-center{
+  text-align: centers;
+}
+
+p.product-price{
+  color: #39a9cb;
+}
+
+.trnsact-id{
+  color: #e5d549;
+}
 </style>

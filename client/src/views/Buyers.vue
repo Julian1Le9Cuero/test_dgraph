@@ -1,6 +1,5 @@
 <template>
   <v-container>
-    <v-row class="text-center">
 
       <v-col class="mb-4">
         <h1 class="display-2 font-weight-bold mb-3">
@@ -17,29 +16,30 @@
 
         <v-row justify="center">
           <div class="item-grid">
-          <div class="buyers"
-            v-for="(buyer, idx) in buyers"
+            <buyer v-for="(buyer, idx) in buyers"
             :key="buyer.id"
-            :item="buyer"
-            :index="idx"
-          >
-            <p>Member since {{buyer.date.slice(0,10)}}</p>
-            <p class="text">Name: <a class="text" :href="`buyers/${buyer.id}`">{{buyer.name}}</a></p>
-            <p class="text">Age: {{buyer.age}}</p>
-          </div>
+            :id_num="buyer.id"
+            :name="buyer.name"
+            :age="buyer.age"
+            :date="buyer.date"
+            :showDate="true"
+            :index="idx"/>
           </div>
         </v-row>
       </v-col>
 
-    </v-row>
   </v-container>
 </template>
 
 <script>
 import HomeService from '../HomeService'
+import Buyer from '../components/Buyer.vue'
 
   export default {
     name: 'Buyers',
+    components: {
+      Buyer
+    },
     data: () => ({
         buyers: [],
         error: ''
