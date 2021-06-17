@@ -35,7 +35,7 @@ func SaveData(client *dgo.Dgraph) {
 		type Buyer {
 			id:  string 
 			name: string    
-			age:  int      
+			age:  int       
 			date: datetime
 		}
 		
@@ -43,7 +43,7 @@ func SaveData(client *dgo.Dgraph) {
 			id:    string   
 			name:  string   
 			price: int      
-			date: datetime
+			date: datetime 
 		}
 		
 		type Transaction {
@@ -52,7 +52,7 @@ func SaveData(client *dgo.Dgraph) {
 			ip:       string          
 			device:   string          
 			products: [Product] @hasInverse(field: id)
-			date: dateTime     
+			date: datetime @search      
 		}
 	`
 
@@ -61,27 +61,24 @@ func SaveData(client *dgo.Dgraph) {
 		log.Fatal(err)
 	}
 
-	mu := &api.Mutation{
-		CommitNow: true,
-	}
+	// Get buyers from API
+	buyers := models.GetBuyers(buyers_url)
 
-	// Get transactions from API
-	transactions := models.GetTransactions(transactions_url)
-	// Loop trough transactions and save each one to db
-	fmt.Println("Inserting transactions...")
-	for _, transaction := range transactions[0:1600] {
+	// Loop trough buyers and save each one to db
+	fmt.Println("Inserting buyers...")
+	for _, buyer := range buyers[0:600] {
+		// Add current date to buyer
+		models.FillDefault(&buyer)
+		buyer.Uid = "_:" + buyer.ID
+		buyer.DType = []string{"Buyer"}
 
-		// Add current date to transaction
-		models.FillDefault(transaction)
-		transaction.Uid = "_:" + transaction.ID
-		transaction.DType = []string{"Transaction"}
-
-		// Convert from Transaction instance to json
-		pb, err := json.Marshal(transaction)
+		// Convert from Buyer instance to json
+		pb, err := json.Marshal(buyer)
 
 		if err != nil {
 			log.Fatal(err)
 		}
+		mu := &api.Mutation{CommitNow: true}
 		// Use JSON and pass the node that will be added
 		mu.SetJson = pb
 
@@ -113,6 +110,8 @@ func SaveData(client *dgo.Dgraph) {
 		if err != nil {
 			log.Fatal(err)
 		}
+
+		mu := &api.Mutation{CommitNow: true}
 		// Use JSON and pass the node that will be added
 		mu.SetJson = pb
 
@@ -125,24 +124,24 @@ func SaveData(client *dgo.Dgraph) {
 
 	}
 
-	// Get buyers from API
-	buyers := models.GetBuyers(buyers_url)
+	// Get transactions from API
+	transactions := models.GetTransactions(transactions_url)
+	// Loop trough transactions and save each one to db
+	fmt.Println("Inserting transactions...")
+	for _, transaction := range transactions[0:1600] {
 
-	// Loop trough buyers and save each one to db
-	fmt.Println("Inserting buyers...")
-	for _, buyer := range buyers[0:600] {
+		// Add current date to transaction
+		models.FillDefault(transaction)
+		transaction.Uid = "_:" + transaction.ID
+		transaction.DType = []string{"Transaction"}
 
-		// Add current date to buyer
-		models.FillDefault(buyer)
-		buyer.Uid = "_:" + buyer.ID
-		buyer.DType = []string{"Buyer"}
-
-		// Convert from Buyer instance to json
-		pb, err := json.Marshal(buyer)
+		// Convert from Transaction instance to json
+		pb, err := json.Marshal(transaction)
 
 		if err != nil {
 			log.Fatal(err)
 		}
+		mu := &api.Mutation{CommitNow: true}
 		// Use JSON and pass the node that will be added
 		mu.SetJson = pb
 

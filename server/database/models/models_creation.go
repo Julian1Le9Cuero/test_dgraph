@@ -78,7 +78,7 @@ func (t *TransactionDgraph) setDate() {
 	t.Date = time.Now()
 }
 
-func GetBuyers(url string) []*BuyerDgraph {
+func GetBuyers(url string) []BuyerDgraph {
 	resp, err := http.Get(url)
 	// Check for errors
 	if err != nil {
@@ -87,15 +87,16 @@ func GetBuyers(url string) []*BuyerDgraph {
 
 	// Read response body
 	body, err := ioutil.ReadAll(resp.Body)
-	// Close body to avoid memory leaks
-	defer resp.Body.Close()
-
+	
 	if err != nil {
 		log.Fatalln(err)
 	}
 
+	// Close body to avoid memory leaks
+	defer resp.Body.Close()
+	
 	// Unmarshal json
-	var buyers []*BuyerDgraph
+	var buyers []BuyerDgraph
 
 	// Convert response body from JSON to Buyer slice
 	err = json.Unmarshal(body, &buyers)

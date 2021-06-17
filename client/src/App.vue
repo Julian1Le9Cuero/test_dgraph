@@ -103,6 +103,15 @@
 </script>
 
 <style>
+.mt-6{
+  margin-top: 6px;
+}
+.mb-6{
+  margin-bottom: 6px;
+}
+.ml-10{
+  margin-left: 10px;
+}
 p.error{
   border: 1px solid #ff5b5f;
   background-color: #ffc5c1;
@@ -126,5 +135,9 @@ p.product-price{
 
 .trnsact-id{
   color: #e5d549;
+}
+.container{
+  width: 100%;
+  position: relative;
 }
 </style>

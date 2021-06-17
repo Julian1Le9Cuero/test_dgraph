@@ -1,16 +1,21 @@
-
 import axios from 'axios'
 
 // Current time in unix format
-const ts = Math.floor(Date.now()/1000 - 5000);
 const url = 'http://localhost:3000';
+const today = Math.floor(Date.now()/1000)
 
 class HomeService{
     // Get buyers, transactions and products
-    static getAllData(){
+    static getAllData(filters){
+        const {date, limit, offset, model} = filters
+        let filterDate = date
+        if (filterDate === null) {
+            filterDate = today
+        }
         return new Promise(async (resolve, reject) => {
             try {
-                const res = await axios.get(`${url}/${ts}`);
+                console.log(`${url}/home?date=${filterDate}&limit=${limit}&offset=${offset}&model=${model}`)
+                const res = await axios.get(`${url}/home?date=${filterDate}&limit=${limit}&offset=${offset}&model=${model}`);
                 const data = res.data;
                 resolve(data);
             } catch (error) {
